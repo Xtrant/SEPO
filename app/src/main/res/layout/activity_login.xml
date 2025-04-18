@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.authentication.LoginActivity">
+
+    <ImageView
+        android:id="@+id/iv_logo"
+        android:layout_width="40dp"
+        android:layout_height="43dp"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/content_description"
+        android:src="@drawable/logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:fontFamily="@font/inter_tight_semi_bold"
+        android:text="@string/name_app"
+        android:textSize="32sp"
+        app:layout_constraintBottom_toBottomOf="@id/iv_logo"
+        app:layout_constraintStart_toEndOf="@id/iv_logo"
+        app:layout_constraintTop_toTopOf="@id/iv_logo" />
+
+    <TextView
+        android:id="@+id/tv_title_greeting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/inter_tight_semi_bold"
+        android:text="@string/greeting_app"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_logo" />
+
+    <ImageView
+        android:id="@+id/iv_greeting"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="8dp"
+        android:src="@drawable/greeting"
+        app:layout_constraintBottom_toBottomOf="@id/tv_title_greeting"
+        app:layout_constraintStart_toEndOf="@id/tv_title_greeting"
+        app:layout_constraintTop_toTopOf="@id/tv_title_greeting" />
+
+    <TextView
+        android:id="@+id/tv_title_information"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/inter_tight_regular"
+        android:text="@string/title_information"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title_greeting" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tf_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:fontFamily="@font/inter_tight_medium"
+        android:hint="@string/title_email"
+        android:textColorHint="#666D80"
+        app:boxBackgroundColor="@color/white"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeColor="@color/input_border_color"
+        app:boxStrokeWidth="1dp"
+        app:layout_constraintBottom_toTopOf="@id/tf_password"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title_information"
+        app:startIconDrawable="@drawable/baseline_email_24">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_email"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/inter_tight_medium"
+            android:gravity="center_vertical"
+            android:textSize="14sp"
+            android:paddingStart="45dp"
+            tools:ignore="RtlSymmetry" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tf_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:boxBackgroundColor="@color/white"
+        app:boxBackgroundMode="outline"
+        app:boxStrokeColor="@color/input_border_color"
+        app:boxStrokeWidth="1dp"
+        android:fontFamily="@font/inter_tight_medium"
+        android:gravity="center"
+        android:hint="@string/title_password"
+        android:textColor="#666D80"
+        android:textColorHint="#666D80"
+        app:endIconMode="password_toggle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tf_email"
+        app:startIconDrawable="@drawable/baseline_lock_outline_24">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_password"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/inter_tight_medium"
+            android:inputType="textPassword"
+            android:paddingStart="45dp"
+            android:paddingEnd="45dp"
+            android:textSize="14sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_continue"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#007DFD"
+        android:fontFamily="@font/inter_tight_semi_bold"
+        android:text="@string/button_login"
+        android:textColor="#F8FAFB"
+        android:textSize="16sp"
+        app:cornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tf_password" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_create"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="#ECEFF3"
+        android:text="@string/title_to_register"
+        android:textColor="#272835"
+        app:cornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_continue"
+        app:strokeColor="#F6F8FA"
+        app:strokeWidth="1dp" />
+
+    <LinearLayout
+        android:id="@+id/tv_continue_with"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/btn_create">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="#A4ABB8" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/inter_tight_medium"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:text="@string/or_continue_with"
+            android:textColor="#A4ABB8"
+            android:textSize="12sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="#A4ABB8" />
+
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_google"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/white"
+        android:text="@string/sign_in_with_google"
+        android:textColor="#272835"
+        app:cornerRadius="16dp"
+        app:icon="@drawable/icon_google"
+        app:iconGravity="textStart"
+        app:iconTint="@null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_continue_with"
+        app:strokeColor="#C1C7CF"
+        app:strokeWidth="1dp" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

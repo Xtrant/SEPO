@@ -1,0 +1,51 @@
+package com.example.sepo.data.retrofit
+
+import com.example.sepo.data.response.ConnectionResponse
+import com.example.sepo.data.response.ListUserResponseItem
+import com.example.sepo.data.response.PostTestResponseItem
+import com.example.sepo.data.response.PreTestResponseItem
+import com.example.sepo.data.response.ProfileResponseItem
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.Query
+
+interface ApiService {
+    @GET("koneksi.php")
+    suspend fun isConnect(): ConnectionResponse
+
+    @GET("read.php")
+    suspend fun listUser(): List<ListUserResponseItem>
+
+    @FormUrlEncoded
+    @POST("create_profile.php")
+    suspend fun createProfile(
+        @Field("user_id") uId: String,
+        @Field("profile_name") name: String,
+        @Field("age") age: Int,
+        @Field("gender") gender: String
+    ): ConnectionResponse
+
+    @GET("list_profiles.php")
+    suspend fun getProfiles(
+        @Query("user_id") uId: String
+    ): List<ProfileResponseItem>
+
+    @FormUrlEncoded
+    @POST("save_user.php")
+    suspend fun saveUser(
+        @Field("user_id") uId: String,
+        @Field("name") name: String,
+        @Field("email") email: String,
+        @Field("photo_url") photoUrl: String
+    ): ConnectionResponse
+
+    @GET("get_post_test.php")
+    suspend fun getPostTest() : List<PostTestResponseItem>
+
+    @GET("get_pre_test.php")
+    suspend fun getPreTest() : List<PreTestResponseItem>
+
+
+}

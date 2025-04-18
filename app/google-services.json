@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "720940238037",
+    "firebase_url": "https://sepo-50b98-default-rtdb.firebaseio.com",
+    "project_id": "sepo-50b98",
+    "storage_bucket": "sepo-50b98.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:720940238037:android:edc45e28ef279976c7ce5c",
+        "android_client_info": {
+          "package_name": "com.example.sepo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "720940238037-acsosslkbu5bfkh8nv9n33h1t9gbbec6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sepo",
+            "certificate_hash": "3c7d80d8d076a73e7fbf40f4b487e50ce289eb37"
+          }
+        },
+        {
+          "client_id": "720940238037-bb7f2g9k9hilfg2gs790iefmta74vq5t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQm5SgDjyFPqHFHPe1YIQOq1nFEZAKzZI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "720940238037-bb7f2g9k9hilfg2gs790iefmta74vq5t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

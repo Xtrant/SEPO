@@ -1,0 +1,17 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.SEPO" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorControlNormal">#C1C7CF</item>
+
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
+
+
+    <style name="Theme.SEPO" parent="Base.Theme.SEPO" />
+
+    <style name="BottomNavLabel" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:fontFamily">@font/inter_tight_semi_bold</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+</resources>
+
