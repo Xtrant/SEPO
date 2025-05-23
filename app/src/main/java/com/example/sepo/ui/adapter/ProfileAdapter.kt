@@ -16,7 +16,6 @@ class ProfileAdapter(
         fun bind(profile: ProfileResponseItem) {
             binding.tvName.text = profile.profileName
             binding.tvAge.text = "Umur: ${profile.age}"
-            binding.tvGender.text = "Gender: ${profile.gender}"
 
             binding.root.setOnClickListener {
                 onItemClick(profile)

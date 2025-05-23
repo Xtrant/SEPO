@@ -5,9 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sepo.data.Repository
-import com.example.sepo.data.response.PostTestResponse
+import com.example.sepo.data.response.ConnectionResponse
 import com.example.sepo.data.response.PostTestResponseItem
-import com.example.sepo.data.response.PreTestResponse
 import com.example.sepo.data.response.PreTestResponseItem
 import com.example.sepo.result.Result
 import kotlinx.coroutines.launch
@@ -18,6 +17,15 @@ class TestViewModel(private val repository: Repository) : ViewModel() {
 
     private val _postTestResult = MutableLiveData<Result<List<PostTestResponseItem>>>()
     val postTestResult: LiveData<Result<List<PostTestResponseItem>>> = _postTestResult
+
+    private val _saveAnswerPostTest = MutableLiveData<Result<ConnectionResponse>>()
+    val saveAnswerPostTest : LiveData<Result<ConnectionResponse>> = _saveAnswerPostTest
+
+    private val _saveAnswerPreTest = MutableLiveData<Result<ConnectionResponse>>()
+    val saveAnswerPreTest : LiveData<Result<ConnectionResponse>> = _saveAnswerPostTest
+
+    private val _saveScore = MutableLiveData<Result<ConnectionResponse>>()
+    val saveScore : LiveData<Result<ConnectionResponse>> = _saveScore
 
 
     fun getPreTest() {
@@ -33,5 +41,45 @@ class TestViewModel(private val repository: Repository) : ViewModel() {
             _postTestResult.value = repository.getPostTest()
         }
     }
+
+    fun getSaveAnswerPostTest(
+        userId: String,
+        profileId: Int,
+        questionId: Int,
+        answerText: String
+    ) {
+        viewModelScope.launch {
+            _saveAnswerPostTest.value = Result.Loading
+            _saveAnswerPostTest.value = repository.saveAnswerPostTest(userId, profileId, questionId, answerText)
+        }
+    }
+
+    fun getSaveAnswerPreTest(
+        userId: String,
+        profileId: Int,
+        questionId: Int,
+        answerText: String
+    ) {
+        viewModelScope.launch {
+            _saveAnswerPreTest.value = Result.Loading
+            _saveAnswerPreTest.value = repository.saveAnswerPreTest(userId, profileId, questionId, answerText)
+        }
+    }
+
+    fun getSaveScore(
+        userId: String,
+        profileId: Int,
+        knowledgeScore: Int,
+        behaveScore: Int,
+        hrqScore: Int,
+        osteoporosisScore: Int,
+        osteoarthritisScore: Int,
+    ) {
+        viewModelScope.launch {
+            _saveScore.value = Result.Loading
+            _saveScore.value = repository.saveScore(userId, profileId, knowledgeScore, behaveScore, hrqScore, osteoporosisScore, osteoarthritisScore)
+        }
+    }
+
 
 }

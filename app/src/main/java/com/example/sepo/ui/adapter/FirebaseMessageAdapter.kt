@@ -16,7 +16,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions
 
 class FirebaseMessageAdapter(
     options: FirebaseRecyclerOptions<Message>,
-    private val currentUserName: String?
+    private val currentUid: String?
 ) : FirebaseRecyclerAdapter<Message, FirebaseMessageAdapter.MessageViewHolder>(options) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
@@ -38,33 +38,29 @@ class FirebaseMessageAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Message) {
             binding.tvMessage.text = item.text
-            updateBubblePosition(item.name)
+            updateBubblePosition(item.uid)
             binding.tvTimestamp.text = item.timestamp?.let {
                 DateUtils.getRelativeTimeSpanString(it)
             }
 
             // Tampilkan nama & foto hanya kalau bukan diri sendiri
-            if (currentUserName == item.name) {
+            if (currentUid == item.uid) {
                 binding.tvMessenger.visibility = View.GONE
                 binding.ivMessenger.visibility = View.GONE
             } else {
                 binding.tvMessenger.visibility = View.VISIBLE
                 binding.tvMessenger.text = item.name
                 binding.ivMessenger.visibility = View.VISIBLE
-                Glide.with(itemView.context)
-                    .load(item.photoUrl)
-                    .circleCrop()
-                    .into(binding.ivMessenger)
             }
         }
 
 
-        private fun updateBubblePosition(userName: String?) {
+        private fun updateBubblePosition(userId: String?) {
             val constraintLayout = binding.rootLayout
             val constraintSet = androidx.constraintlayout.widget.ConstraintSet()
             constraintSet.clone(constraintLayout)
 
-            if (currentUserName == userName && userName != null) {
+            if (currentUid == userId && userId != null) {
                 // Chat dari user sendiri → Geser ke kanan
                 constraintSet.clear(binding.tvMessage.id, androidx.constraintlayout.widget.ConstraintSet.START)
                 constraintSet.connect(

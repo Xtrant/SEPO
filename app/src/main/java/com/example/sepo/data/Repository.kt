@@ -1,6 +1,7 @@
 package com.example.sepo.data
 
 import com.example.sepo.data.response.ConnectionResponse
+import com.example.sepo.data.response.DoctorResponseItem
 import com.example.sepo.data.response.ListUserResponseItem
 import com.example.sepo.data.response.PostTestResponse
 import com.example.sepo.data.response.PostTestResponseItem
@@ -80,6 +81,60 @@ class Repository(private val apiService: ApiService) {
     suspend fun getPostTest(): Result<List<PostTestResponseItem>> {
         return try {
             val response = apiService.getPostTest()
+            Result.Success(response)
+        } catch (e: HttpException) {
+            Result.Error(e.toString())
+        }
+    }
+
+    suspend fun saveAnswerPostTest(
+        userId: String,
+        profileId: Int,
+        questionId: Int,
+        answerText: String
+    ): Result<ConnectionResponse> {
+        return try {
+            val response = apiService.saveAnswerPostTest(userId, profileId , questionId, answerText)
+            Result.Success(response)
+        } catch (e: HttpException) {
+            Result.Error(e.toString())
+        }
+    }
+
+    suspend fun saveAnswerPreTest(
+        userId: String,
+        profileId: Int,
+        questionId: Int,
+        answerText: String
+    ): Result<ConnectionResponse> {
+        return try {
+            val response = apiService.saveAnswerPreTest(userId, profileId , questionId, answerText)
+            Result.Success(response)
+        } catch (e: HttpException) {
+            Result.Error(e.toString())
+        }
+    }
+
+    suspend fun saveScore(
+        userId: String,
+        profileId: Int,
+        knowledgeScore: Int,
+        behaveScore: Int,
+        hrqScore: Int,
+        osteoporosisScore: Int,
+        osteoarthritisScore: Int,
+    ): Result<ConnectionResponse> {
+        return try {
+            val response = apiService.saveScore(userId, profileId, knowledgeScore, behaveScore, hrqScore, osteoporosisScore, osteoarthritisScore)
+            Result.Success(response)
+        } catch (e: HttpException) {
+            Result.Error(e.toString())
+        }
+    }
+
+    suspend fun getDoctor(): Result<List<DoctorResponseItem>> {
+        return try {
+            val response = apiService.getDoctor()
             Result.Success(response)
         } catch (e: HttpException) {
             Result.Error(e.toString())

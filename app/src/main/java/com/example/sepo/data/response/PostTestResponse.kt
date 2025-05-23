@@ -17,7 +17,7 @@ data class PostTestResponseItem(
 	val options: List<String?>? = null,
 
 	@field:SerializedName("id")
-	val id: String? = null,
+	val id: Int,
 
 	@field:SerializedName("correctAnswer")
 	val correctAnswer: String? = null

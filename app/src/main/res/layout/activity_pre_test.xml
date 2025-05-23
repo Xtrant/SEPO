@@ -37,7 +37,8 @@
             android:id="@+id/btn_sbmt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_margin="16dp"
+            android:backgroundTint="#82628E"
             android:visibility="gone"
             android:text="Submit"/>
 

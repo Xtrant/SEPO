@@ -1,6 +1,7 @@
 package com.example.sepo.data.retrofit
 
 import com.example.sepo.data.response.ConnectionResponse
+import com.example.sepo.data.response.DoctorResponseItem
 import com.example.sepo.data.response.ListUserResponseItem
 import com.example.sepo.data.response.PostTestResponseItem
 import com.example.sepo.data.response.PreTestResponseItem
@@ -46,6 +47,40 @@ interface ApiService {
 
     @GET("get_pre_test.php")
     suspend fun getPreTest() : List<PreTestResponseItem>
+
+    @FormUrlEncoded
+    @POST("save_answer_post_test.php")
+    suspend fun saveAnswerPostTest(
+        @Field("user_id") userId: String,
+        @Field("profile_id") profileId: Int,
+        @Field("question_id") questionId: Int,
+        @Field("answer_text") photoUrl: String
+    ): ConnectionResponse
+
+    @FormUrlEncoded
+    @POST("save_answer_pre_test.php")
+    suspend fun saveAnswerPreTest(
+        @Field("user_id") userId: String,
+        @Field("profile_id") profileId: Int,
+        @Field("question_id") questionId: Int,
+        @Field("answer_text") photoUrl: String
+    ): ConnectionResponse
+
+    @FormUrlEncoded
+    @POST("insert_score.php")
+    suspend fun saveScore(
+        @Field("user_id") userId: String,
+        @Field("profile_id") profileId: Int,
+        @Field("knowledge_score") knowledgeScore: Int,
+        @Field("behave_score") behaveScore: Int,
+        @Field("hrq_score") hrqScore: Int,
+        @Field("osteoporosis_score") osteoporosisScore: Int,
+        @Field("osteoarthritis_score") osteoarthritisScore: Int,
+    ): ConnectionResponse
+
+    @GET("list_doctor.php")
+    suspend fun getDoctor() : List<DoctorResponseItem>
+
 
 
 }

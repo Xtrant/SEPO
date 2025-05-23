@@ -16,7 +16,8 @@ import androidx.fragment.app.Fragment
 
 import com.example.sepo.R
 import com.example.sepo.databinding.FragmentHomeBinding
-import com.example.sepo.ui.LiveChatActivity
+import com.example.sepo.ui.consult.ConsultActivity
+import com.example.sepo.ui.consult.LiveChatActivity
 import com.example.sepo.ui.test.PostTestActivity
 import com.example.sepo.ui.test.PreTestActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -62,7 +63,7 @@ class HomeFragment : Fragment() {
             startActivity(Intent(requireContext(), PreTestActivity::class.java))
         }
         binding?.icConsult?.setOnClickListener {
-            startActivity(Intent(requireContext(), LiveChatActivity::class.java))
+            startActivity(Intent(requireContext(), ConsultActivity::class.java))
         }
     }
 

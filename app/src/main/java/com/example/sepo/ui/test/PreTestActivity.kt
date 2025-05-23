@@ -1,8 +1,8 @@
 package com.example.sepo.ui.test
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -11,25 +11,24 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sepo.R
-import com.example.sepo.data.response.AnswerOption
-import com.example.sepo.data.response.Question
-import com.example.sepo.data.response.UserAnswer
+import com.example.sepo.data.response.PreTestResponseItem
+import com.example.sepo.data.response.UserAnswerPreTest
 import com.example.sepo.databinding.ActivityPreTestBinding
+import com.example.sepo.result.Result
 import com.example.sepo.ui.ViewModelFactory
-import com.example.sepo.ui.adapter.QuestionAdapter
-import com.example.sepo.ui.profile.ProfileViewModel
+import com.example.sepo.ui.adapter.PreTestAdapter
+import com.example.sepo.utils.SessionManager
+import com.example.sepo.utils.showLoading
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlin.getValue
 
 class PreTestActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPreTestBinding
     private lateinit var auth: FirebaseAuth
-    private lateinit var db: FirebaseFirestore
-    private lateinit var adapter: QuestionAdapter
-    private val userAnswers = mutableMapOf<String, UserAnswer>() // Menyimpan jawaban user
-    private var totalScore = 0
+    private lateinit var adapter: PreTestAdapter
+    private val userAnswers = mutableListOf<UserAnswerPreTest>() // Menyimpan jawaban user
+    private var behaveTotalScore = 0
+    private var hrqTotalScore = 0
     private val viewModel: TestViewModel by viewModels {
         ViewModelFactory.getInstance(application)
     }
@@ -46,26 +45,46 @@ class PreTestActivity : AppCompatActivity() {
             insets
         }
 
-        db = FirebaseFirestore.getInstance()
+        observeViewModel()
+
+        viewModel.getPreTest()
+
         auth = FirebaseAuth.getInstance()
 
         setupRecyclerView()
-        loadQuestionsFromFirestore()
+//        loadQuestionsFromFirestore()
 //
-//        binding.btnSbmt.setOnClickListener {
-//            saveUserAnswersToFirestore()
-//            calculateScore()
-//        }
+        binding.btnSbmt.setOnClickListener {
+            calculateScore()
+        }
+    }
+
+    private fun observeViewModel() {
+        viewModel.preTestResult.observe(this) { result ->
+            when (result) {
+                is Result.Loading -> {
+                    showLoading(true, binding.progressBar)
+                }
+
+                is Result.Success -> {
+                    showLoading(false, binding.progressBar)
+                    binding.btnSbmt.visibility = View.VISIBLE
+                    adapter.submitList(result.data)
+                }
+
+                is Result.Error -> {
+                    showLoading(false, binding.progressBar)
+                    binding.btnSbmt.visibility = View.VISIBLE
+                    Toast.makeText(this, "Gagal membuat profil: ${result.error}", Toast.LENGTH_LONG)
+                        .show()
+                }
+            }
+        }
     }
 
     private fun setupRecyclerView() {
-        adapter = QuestionAdapter(isPreTest = true) { question, selectedOption ->
-            userAnswers[question.id] = UserAnswer(
-                username = auth.currentUser?.displayName ?: "Guest",
-                question = question.question,
-                selectedOption = selectedOption.text,
-                points = selectedOption.points
-            )
+        adapter = PreTestAdapter { question, answerText, behavePoints, hrqPoints ->
+            saveUserAnswer(question, answerText, behavePoints, hrqPoints)
         }
 
         binding.recyclerView.apply {
@@ -74,90 +93,66 @@ class PreTestActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadQuestionsFromFirestore() {
-        db.collection("pre_test") // Ambil dari koleksi yang benar
-            .get()
-            .addOnSuccessListener { result ->
-                val questions = result.map { doc ->
-                    val optionsList = doc.get("options") as? List<Map<String, Any>> ?: emptyList()
-                    val options = optionsList.map {
-                        AnswerOption(
-                            text = it["text"] as? String ?: "",
-                            points = (it["points"] as? Number)?.toInt() ?: 0
-                        )
-                    }
+    private fun saveUserAnswer(question: PreTestResponseItem, selectedOption: String, behavePoints: Int, hrqPoints: Int) {
+        val session = SessionManager(this)
+        val profileName = session.getProfileName()
+        val userAnswer = UserAnswerPreTest(
+            profileName.toString(),
+            question.question.toString(),
+            selectedOption,
+            behavePoints,
+            hrqPoints
+        )
 
-                    Question(
-                        id = doc.id,
-                        question = doc.getString("question") ?: "",
-                        options = options
-                    )
-                }
-
-                adapter.submitList(questions)
-                if (questions.isNotEmpty()) {
-                    binding.btnSbmt.visibility = View.VISIBLE
-                    binding.progressBar.visibility = View.GONE
-                }
-            }
-            .addOnFailureListener { e ->
-                binding.progressBar.visibility = View.GONE
-                Log.e("Firestore", "Gagal mengambil data", e)
-            }
-    }
-
-    private fun saveUserAnswersToFirestore() {
-        val userId = auth.currentUser?.uid ?: return
-        val userRef = db.collection("user_answers").document(userId)
-
-        userAnswers.forEach { (_, userAnswer) ->
-            val answerData = hashMapOf(
-                "username" to userAnswer.username,
-                "question" to userAnswer.question,
-                "selectedOption" to userAnswer.selectedOption,
-                "points" to userAnswer.points,
-                "timestamp" to FieldValue.serverTimestamp()
-            )
-
-            userRef.collection("pre_test_answers").document(userAnswer.question)
-                .set(answerData)
+        val existingIndex = userAnswers.indexOfFirst { it.question == question.question }
+        if (existingIndex != -1) {
+            userAnswers[existingIndex] = userAnswer // Update jawaban jika sudah ada
+        } else {
+            userAnswers.add(userAnswer) // Tambah jawaban baru
         }
     }
 
-//    private fun calculateScore() {
-//        totalScore = userAnswers.values.sumOf { it.points } // Menjumlahkan semua poin dari jawaban user
-//
-//        val scoreMessage = "Total Skor Pre-Test: $totalScore"
-//
-//        showResultDialog(scoreMessage)
-//        saveUserScoreToFirestore(totalScore)
-//    }
-//
-//    private fun showResultDialog(message: String) {
-//        AlertDialog.Builder(this)
-//            .setTitle("Hasil Pre-Test")
-//            .setMessage(message)
-//            .setPositiveButton("OK", null)
-//            .show()
-//    }
-//
-//    private fun saveUserScoreToFirestore(score: Int) {
-//        val userId = auth.currentUser?.uid ?: return
-//        val userRef = db.collection("user_answers").document(userId)
-//
-//        val scoreData = hashMapOf(
-//            "totalScore" to score,
-//            "timestamp" to FieldValue.serverTimestamp()
-//        )
-//
-//        userRef.collection("pre_test_results").document("score")
-//            .set(scoreData)
-//            .addOnSuccessListener {
-//                binding.progressBar.visibility = View.GONE
-//            }
-//            .addOnFailureListener { e ->
-//                binding.progressBar.visibility = View.GONE
-//                Log.e("Firestore", "Gagal menyimpan skor", e)
-//            }
-//    }
+    private fun calculateScore() {
+        behaveTotalScore = userAnswers.sumOf { it.behavePoints }
+        hrqTotalScore = userAnswers.sumOf { it.hrqPoints }
+        val session = SessionManager(this)
+        val userId = auth.currentUser?.uid
+        val profileId = session.getProfileId()
+        val scoreMessage = "Total Skor Pre-Test: \n\n Skor Behaviour (Perilaku) : $behaveTotalScore \n Skor HRQoL : $hrqTotalScore"
+        userAnswers.forEach { userAnswer ->
+            val question = adapter.currentList.find { it.question == userAnswer.question }
+            question?.let {
+                viewModel.getSaveAnswerPreTest(
+                    userId.toString(),
+                    profileId,
+                    it.id,
+                    userAnswer.selectedOption
+                )
+
+            }
+        }
+
+        viewModel.getSaveScore(
+            userId.toString(),
+            profileId,
+            0,
+            behaveTotalScore,
+            hrqTotalScore,
+            0,
+            0
+        )
+
+        showResultDialog(scoreMessage)
+    }
+
+    private fun showResultDialog(message: String) {
+        AlertDialog.Builder(this)
+            .setTitle("Hasil Pre-Test")
+            .setMessage(message)
+            .setPositiveButton("OK", null)
+            .show()
+    }
 }
+
+
+

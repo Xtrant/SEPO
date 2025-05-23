@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class ProfileResponseItem(
     @SerializedName("profile_id")
-    val profileId: String,
+    val profileId: Int,
 
     @SerializedName("user_id")
     val userId: String,
@@ -13,7 +13,7 @@ data class ProfileResponseItem(
     val profileName: String,
 
     @SerializedName("age")
-    val age: String,
+    val age: Int,
 
     @SerializedName("gender")
     val gender: String,

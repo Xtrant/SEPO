@@ -17,7 +17,7 @@ data class PreTestResponseItem(
 	val options: List<OptionsItem?>? = null,
 
 	@field:SerializedName("id")
-	val id: String? = null
+	val id: Int
 )
 
 data class OptionsItem(
@@ -25,6 +25,9 @@ data class OptionsItem(
 	@field:SerializedName("text")
 	val text: String? = null,
 
-	@field:SerializedName("points")
-	val points: Int? = null
+	@field:SerializedName("points_behaviour")
+	val behavePoints: Int? = null,
+
+	@field:SerializedName("points_hrq")
+	val hrqPoints: Int? = null
 )

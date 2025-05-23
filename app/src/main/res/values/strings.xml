@@ -37,6 +37,7 @@
     <string name="title_education">Lanjutan Materi Edukasi</string>
     <string name="materi_osteoarthritis">Materi Osteoarthritis</string>
     <string name="your_web_client_id">720940238037-bb7f2g9k9hilfg2gs790iefmta74vq5t.apps.googleusercontent.com</string>
+    <string name="ipv4">192.168.1.12</string>
     <string name="title_greeting_user">Hi, %1$s</string>
     <string name="title_logo_home_1">Pre Test</string>
     <string name="title_logo_home_2">Post Test</string>

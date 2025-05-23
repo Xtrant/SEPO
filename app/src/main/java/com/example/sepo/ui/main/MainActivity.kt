@@ -12,6 +12,7 @@ import com.example.sepo.R
 import com.example.sepo.databinding.ActivityMainBinding
 import com.example.sepo.ui.authentication.LoginActivity
 import com.example.sepo.ui.profile.SelectProfileActivity
+import com.example.sepo.utils.SessionManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -33,7 +34,8 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        profileName = intent.getStringExtra("profile name")
+        val session = SessionManager(this)
+        profileName = session.getProfileName()
 
         //setting auth
         auth = Firebase.auth
@@ -59,6 +61,9 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this@MainActivity, LoginActivity::class.java))
             finish()
         }
+
+        val session = SessionManager(this)
+        profileName = session.getProfileName()
         if (profileName == null) {
             startActivity(Intent(this, SelectProfileActivity::class.java))
             finish()

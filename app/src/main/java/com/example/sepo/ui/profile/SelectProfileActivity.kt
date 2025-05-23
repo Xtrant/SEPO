@@ -16,6 +16,7 @@ import com.example.sepo.result.Result
 import com.example.sepo.ui.ViewModelFactory
 import com.example.sepo.ui.adapter.ProfileAdapter
 import com.example.sepo.ui.main.MainActivity
+import com.example.sepo.utils.SessionManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -64,9 +65,9 @@ class SelectProfileActivity : AppCompatActivity() {
                 is Result.Success -> {
                     val adapter = ProfileAdapter(result.data) { profile ->
                         Toast.makeText(this, "Profil ${profile.profileName} dipilih", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this, MainActivity::class.java)
-                        intent.putExtra("profile name", profile.profileName)
-                        startActivity(intent)
+                        val session = SessionManager(this)
+                        session.saveSession(profile.profileId, profile.profileName)
+                        startActivity(Intent(this, MainActivity::class.java))
                     }
                     binding.rvProfiles.layoutManager = LinearLayoutManager(this)
                     binding.rvProfiles.adapter = adapter

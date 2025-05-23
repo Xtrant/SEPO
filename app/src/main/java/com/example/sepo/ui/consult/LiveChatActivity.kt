@@ -1,16 +1,15 @@
-package com.example.sepo.ui
+package com.example.sepo.ui.consult
 
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sepo.R
 import com.example.sepo.data.response.Message
 import com.example.sepo.databinding.ActivityLiveChatBinding
 import com.example.sepo.ui.adapter.FirebaseMessageAdapter
+import com.example.sepo.utils.SessionManager
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -35,21 +34,32 @@ class LiveChatActivity : AppCompatActivity() {
         db = Firebase.database
 
         val firebaseUser = auth.currentUser
+        val uid = firebaseUser?.uid
 
-        val messagesRef = db.reference.child(MESSAGES_CHILD)
+        val session = SessionManager(this)
+        val profileId = session.getProfileId()
+
+        val doctorId = intent.getStringExtra("id_doctor")
+
+        val messagesRef = db.reference.child(MESSAGES_CHILD).child(uid.toString()).child(doctorId.toString()).child(profileId.toString())
 
         binding.sendButton.setOnClickListener {
             val friendlyMessage = Message(
                 binding.messageEditText.text.toString(),
                 firebaseUser?.displayName.toString(),
-                firebaseUser?.photoUrl.toString(),
                 Date().time,
+                firebaseUser?.uid
             )
             messagesRef.push().setValue(friendlyMessage) { error, _ ->
                 if (error != null) {
-                    Toast.makeText(this, getString(R.string.send_error) + error.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        getString(R.string.send_error) + error.message,
+                        Toast.LENGTH_SHORT
+                    ).show()
                 } else {
-                    Toast.makeText(this, getString(R.string.send_success), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, getString(R.string.send_success), Toast.LENGTH_SHORT)
+                        .show()
                     binding.messageRecyclerView.scrollToPosition(adapter.itemCount - 1)
                 }
             }
@@ -64,17 +74,20 @@ class LiveChatActivity : AppCompatActivity() {
             .setQuery(messagesRef, Message::class.java)
             .build()
         if (firebaseUser != null) {
-            adapter = FirebaseMessageAdapter(options, firebaseUser.displayName
+            adapter = FirebaseMessageAdapter(
+                options, firebaseUser.uid
             )
         }
         binding.messageRecyclerView.adapter = adapter
     }
+
     public override fun onResume() {
         super.onResume()
         adapter.startListening()
 
 
     }
+
     public override fun onPause() {
         adapter.stopListening()
         super.onPause()

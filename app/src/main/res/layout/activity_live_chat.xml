@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    tools:context=".ui.LiveChatActivity">
+    tools:context=".ui.consult.LiveChatActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messageRecyclerView"

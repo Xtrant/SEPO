@@ -145,16 +145,7 @@ class LoginActivity : AppCompatActivity() {
             finish()
         }
     }
-
-    private fun addQuestionsToFirestore(collectionName: String, questions: List<Map<String, Any>>) {
-        for (question in questions) {
-            db.collection(collectionName).add(question)
-                .addOnSuccessListener { Log.d("Firestore", "Pertanyaan berhasil ditambahkan ke $collectionName") }
-                .addOnFailureListener { e -> Log.e("Firestore", "Error: $e") }
-        }
-    }
-
-
+    
     override fun onStart() {
         super.onStart()
         val currentUser = auth.currentUser
