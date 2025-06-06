@@ -1,27 +1,18 @@
 package com.example.sepo.data
 
 import com.example.sepo.data.response.ConnectionResponse
+import com.example.sepo.data.response.DemographicTestResponseItem
 import com.example.sepo.data.response.DoctorResponseItem
 import com.example.sepo.data.response.ListUserResponseItem
-import com.example.sepo.data.response.PostTestResponse
 import com.example.sepo.data.response.PostTestResponseItem
-import com.example.sepo.data.response.PreTestResponse
 import com.example.sepo.data.response.PreTestResponseItem
 import com.example.sepo.data.response.ProfileResponseItem
+import com.example.sepo.data.response.VideoResponseItem
 import com.example.sepo.data.retrofit.ApiService
 import com.example.sepo.result.Result
 import retrofit2.HttpException
 
 class Repository(private val apiService: ApiService) {
-
-    suspend fun connect(): Result<ConnectionResponse> {
-        return try {
-            val response = apiService.isConnect()
-            Result.Success(response)
-        } catch (e: HttpException) {
-            Result.Error(e.toString())
-        }
-    }
 
     suspend fun listUser(): Result<List<ListUserResponseItem>> {
         return try {
@@ -35,11 +26,26 @@ class Repository(private val apiService: ApiService) {
     suspend fun createProfile(
         userId: String,
         profileName: String,
-        age: Int,
-        gender: String
+        age: String,
+        gender: String,
+        weight: String,
+        height: String
     ): Result<ConnectionResponse> {
         return try {
-            val response = apiService.createProfile(userId, profileName, age, gender)
+            val response = apiService.createProfile(userId, profileName, age, gender, weight, height)
+            Result.Success(response)
+        } catch (e: HttpException) {
+            Result.Error(e.toString())
+        }
+    }
+
+    suspend fun saveCondition(
+        userId: String,
+        profileId: Int,
+        condition: String,
+    ): Result<ConnectionResponse> {
+        return try {
+            val response = apiService.saveCondition(userId, profileId, condition)
             Result.Success(response)
         } catch (e: HttpException) {
             Result.Error(e.toString())
@@ -87,6 +93,15 @@ class Repository(private val apiService: ApiService) {
         }
     }
 
+    suspend fun getDemographicTest(): Result<List<DemographicTestResponseItem>> {
+        return try {
+            val response = apiService.getDemographicTest()
+            Result.Success(response)
+        } catch (e: HttpException) {
+            Result.Error(e.toString())
+        }
+    }
+
     suspend fun saveAnswerPostTest(
         userId: String,
         profileId: Int,
@@ -109,6 +124,20 @@ class Repository(private val apiService: ApiService) {
     ): Result<ConnectionResponse> {
         return try {
             val response = apiService.saveAnswerPreTest(userId, profileId , questionId, answerText)
+            Result.Success(response)
+        } catch (e: HttpException) {
+            Result.Error(e.toString())
+        }
+    }
+
+    suspend fun saveAnswerDemographyTest(
+        userId: String,
+        profileId: Int,
+        questionId: Int,
+        answerText: String
+    ): Result<ConnectionResponse> {
+        return try {
+            val response = apiService.saveAnswerDemographyTest(userId, profileId , questionId, answerText)
             Result.Success(response)
         } catch (e: HttpException) {
             Result.Error(e.toString())
@@ -140,6 +169,25 @@ class Repository(private val apiService: ApiService) {
             Result.Error(e.toString())
         }
     }
+
+    suspend fun getEdukasi(): Result<List<VideoResponseItem>> {
+        return try {
+            val response = apiService.getEdukasi()
+            Result.Success(response)
+        } catch (e: HttpException) {
+            Result.Error(e.toString())
+        }
+    }
+
+    suspend fun getExercise(): Result<List<VideoResponseItem>> {
+        return try {
+            val response = apiService.getExercise()
+            Result.Success(response)
+        } catch (e: HttpException) {
+            Result.Error(e.toString())
+        }
+    }
+
 
 
     companion object {

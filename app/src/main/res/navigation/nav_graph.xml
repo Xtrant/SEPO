@@ -17,10 +17,10 @@
         tools:layout="@layout/fragment_exercise"/>
 
     <fragment
-        android:id="@+id/nav_education"
-        android:name="com.example.sepo.ui.bottomnav.EducationFragment"
-        android:label="Education"
-        tools:layout="@layout/fragment_education"/>
+        android:id="@+id/nav_consult"
+        android:name="com.example.sepo.ui.bottomnav.ConsultFragment"
+        android:label="Consult"
+        tools:layout="@layout/fragment_consult"/>
 
     <fragment
         android:id="@+id/nav_profile"

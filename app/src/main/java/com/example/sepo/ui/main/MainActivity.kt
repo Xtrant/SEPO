@@ -11,7 +11,6 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.sepo.R
 import com.example.sepo.databinding.ActivityMainBinding
 import com.example.sepo.ui.authentication.LoginActivity
-import com.example.sepo.ui.profile.SelectProfileActivity
 import com.example.sepo.utils.SessionManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -21,7 +20,7 @@ import com.google.firebase.ktx.Firebase
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var auth: FirebaseAuth
-    private var profileName: String? = null
+    private var profileName = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         val session = SessionManager(this)
-        profileName = session.getProfileName()
+        profileName = session.getProfileName().toString()
 
         //setting auth
         auth = Firebase.auth
@@ -63,9 +62,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         val session = SessionManager(this)
-        profileName = session.getProfileName()
-        if (profileName == null) {
-            startActivity(Intent(this, SelectProfileActivity::class.java))
+        profileName = session.getProfileName().toString()
+        val condition = session.getCondition().toString()
+        if (profileName.isBlank() || condition.isBlank()) {
+            startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
 

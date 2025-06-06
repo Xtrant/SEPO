@@ -2,28 +2,24 @@ package com.example.sepo.data.response
 
 import com.google.gson.annotations.SerializedName
 
-data class DemograpicTestResponse(
-
-	@field:SerializedName("DemograpicTestResponse")
-	val demograpicTestResponse: List<DemograpicTestResponseItem>
-)
-
-data class DemograpicTestResponseItem(
+data class DemographicTestResponseItem(
 
 	@field:SerializedName("question")
 	val question: String,
 
 	@field:SerializedName("options")
-	val options: List<OptionsItem>,
+	val options: List<DemoOptionsItem>,
 
 	@field:SerializedName("id")
-	val id: String
+	val id: Int,
+
+	var isError: Boolean = false
 )
 
-data class OptionsItem(
+data class DemoOptionsItem(
 
 	@field:SerializedName("text")
-	val text: String,
+	val text: String ? = null,
 
 	@field:SerializedName("points_arthritis")
 	val pointsArthritis: Int,

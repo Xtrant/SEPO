@@ -13,13 +13,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-
+import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sepo.R
 import com.example.sepo.databinding.FragmentHomeBinding
-import com.example.sepo.ui.consult.ConsultActivity
-import com.example.sepo.ui.consult.LiveChatActivity
+import com.example.sepo.result.Result
+import com.example.sepo.ui.ViewModelFactory
+import com.example.sepo.ui.adapter.RecommendAdapter
+import com.example.sepo.ui.education.EducationActivity
+import com.example.sepo.ui.list.ListUserViewModel
 import com.example.sepo.ui.test.PostTestActivity
 import com.example.sepo.ui.test.PreTestActivity
+import com.example.sepo.utils.SessionManager
+import com.example.sepo.utils.showLoading
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -29,6 +35,10 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding
     private lateinit var auth: FirebaseAuth
+    private val viewModel: ListUserViewModel by viewModels {
+        ViewModelFactory.getInstance(requireActivity().application)
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,8 +72,44 @@ class HomeFragment : Fragment() {
         binding?.icPreTest?.setOnClickListener {
             startActivity(Intent(requireContext(), PreTestActivity::class.java))
         }
-        binding?.icConsult?.setOnClickListener {
-            startActivity(Intent(requireContext(), ConsultActivity::class.java))
+        binding?.icEdukasi?.setOnClickListener {
+            startActivity(Intent(requireContext(), EducationActivity::class.java))
+        }
+
+        binding?.viewAll?.setOnClickListener {
+            startActivity(Intent(requireContext(), EducationActivity::class.java))
+        }
+
+        viewModel.listEdukasi()
+
+        observeViewModel()
+
+
+    }
+
+    private fun observeViewModel() {
+        viewModel.resultListEdukasi.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Loading -> {
+                    showLoading(true, binding?.progressBar)
+                }
+
+                is Result.Success -> {
+                    showLoading(false, binding?.progressBar)
+                    val adapter = RecommendAdapter(result.data) { video ->
+                        startActivity(Intent(requireContext(), EducationActivity::class.java))
+
+                    }
+                    binding?.rvMateri?.layoutManager = LinearLayoutManager(context)
+                    binding?.rvMateri?.adapter = adapter
+                }
+
+
+                is Result.Error -> {
+                    showLoading(false, binding?.progressBar)
+
+                }
+            }
         }
     }
 
@@ -150,7 +196,9 @@ class HomeFragment : Fragment() {
 
     private fun setTitleGreeting() {
         val profileName = arguments?.getString("profile_name")
+        val session = SessionManager(requireContext())
+        val kondisi = session.getCondition()
 
-        binding?.tvTitleGreeting?.text = getString(R.string.title_greeting_user, profileName)
+        binding?.tvTitleGreeting?.text = getString(R.string.title_greeting_user, profileName)  + "\n\n Kamu $kondisi "
     }
 }

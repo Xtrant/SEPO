@@ -17,10 +17,10 @@ class ProfileViewModel(private val repo: Repository) : ViewModel() {
     private val _createResult = MutableLiveData<Result<ConnectionResponse>>()
     val createResult: LiveData<Result<ConnectionResponse>> = _createResult
 
-    fun createProfile(uid: String, name: String, age: Int, gender: String) {
+    fun createProfile(uid: String, name: String, age: String, gender: String, weight: String, height: String) {
         viewModelScope.launch {
             _createResult.value = Result.Loading
-            _createResult.value = repo.createProfile(uid, name, age, gender)
+            _createResult.value = repo.createProfile(uid, name, age, gender, weight, height)
         }
     }
 

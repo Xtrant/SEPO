@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.consult.ConsultActivity">
+    tools:context=".ui.bottomnav.ConsultFragment">
 
     <TextView
         android:id="@+id/tv_title"
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:fontFamily="@font/inter_tight_semi_bold"
-        android:text="Rekomendasi Dokter"
+        android:text="@string/rekomendasi_dokter"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -34,14 +34,24 @@ class CreateProfileActivity : AppCompatActivity() {
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: ""
 
         binding.btnCreateProfile.setOnClickListener {
-            val name = binding.etName.text.toString()
-            val age = binding.etAge.text.toString().toIntOrNull()
-            val gender = binding.etGender.text.toString()
+            val name = binding.etUsername.text.toString()
+            val age = binding.etAge.text.toString()
+            val selectedId = binding.rgGender.checkedRadioButtonId
+            val gender = when (selectedId) {
+                R.id.rb_male -> "Laki-laki"
+                R.id.rb_female -> "Perempuan"
+                else -> {
+                    Toast.makeText(this, "Silakan pilih jenis kelamin", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+            }
+            val weight = binding.etBeratBadan.text.toString()
+            val height = binding.etTinggiBadan.text.toString()
 
-            if (name.isNotBlank() && age != null && gender.isNotBlank()) {
-                viewModel.createProfile(uid, name, age, gender)
+            if (name.isNotBlank() && age.isNotBlank() && gender.isNotBlank() && height.isNotBlank() && weight.isNotBlank()) {
+                viewModel.createProfile(uid, name, age, gender, weight, height)
             } else {
-                Toast.makeText(this, "Lengkapi semua field", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Lengkapi semua Data", Toast.LENGTH_SHORT).show()
             }
         }
 

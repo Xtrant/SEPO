@@ -46,6 +46,15 @@
                 android:textColor="#666D80"
                 android:textSize="14sp" />
 
+            <EditText
+                android:id="@+id/et_answer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/inter_tight_regular"
+                android:textColor="#666D80"
+                android:textSize="14sp"
+                android:visibility="gone"/>
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

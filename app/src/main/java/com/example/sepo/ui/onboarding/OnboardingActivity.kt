@@ -5,8 +5,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.sepo.databinding.ActivityOnboardingBinding
-import com.example.sepo.ui.authentication.LoginActivity
 import com.example.sepo.ui.adapter.OnboardingAdapter
+import com.example.sepo.ui.authentication.LoginActivity
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator
 
 class OnboardingActivity : AppCompatActivity() {
@@ -33,10 +33,8 @@ class OnboardingActivity : AppCompatActivity() {
             // Pindah ke halaman berikutnya
             viewPager.setCurrentItem(currentItem + 1, true)
         } else {
-            // Jika sudah di halaman terakhir, misalnya arahkan ke MainActivity
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-            finish()  // Menutup OnboardingActivity
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
         }
     }
 

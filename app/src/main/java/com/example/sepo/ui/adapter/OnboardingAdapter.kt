@@ -6,14 +6,15 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.sepo.R
 import com.example.sepo.ui.onboarding.OnboardingFragment
 
-//TODO ubah title, gambar, dan onboarding di sini
+
 
 class OnboardingAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activity) {
 
     private val onboardingData = listOf(
-        OnboardingData(R.drawable.baseline_person_24, "Title 1", "Description 1"),
-        OnboardingData(R.drawable.baseline_visibility_24, "Title 2", "Description 2"),
-        OnboardingData(R.drawable.baseline_visibility_off_24, "Title 3", "Description 3")
+        OnboardingData(R.drawable.onboarding_img, "Selamat Datang di SEPO", "SEPO membantumu mengenali risiko osteoporosis dan osteoarthritis melalui kuisioner dan edukasi interaktif. Semua bisa kamu lakukan secara mandiri dan mudah."),
+        OnboardingData(R.drawable.onboarding_img, "Isi Kuisioner & Dapatkan Hasilmu", "Jawab beberapa pertanyaan tentang kondisi tubuh dan kebiasaan harianmu. Aplikasi akan menunjukkan apakah kamu berisiko terkena osteoporosis atau osteoarthritis."),
+        OnboardingData(R.drawable.onboarding_img, "Edukasi dan Konsultasi Langsung", "Dapatkan tips, latihan, dan edukasi sesuai hasil tesmu. Butuh bantuan lebih lanjut? Gunakan fitur live chat untuk konsultasi langsung."
+                )
     )
 
     override fun getItemCount(): Int = onboardingData.size

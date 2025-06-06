@@ -4,11 +4,9 @@ import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.Visibility
-import com.bumptech.glide.Glide
 import com.example.sepo.R
+
 import com.example.sepo.data.response.Message
 import com.example.sepo.databinding.ItemMessageBinding
 import com.firebase.ui.database.FirebaseRecyclerAdapter
@@ -16,13 +14,11 @@ import com.firebase.ui.database.FirebaseRecyclerOptions
 
 class FirebaseMessageAdapter(
     options: FirebaseRecyclerOptions<Message>,
-    private val currentUid: String?
+    private val currentProfileId: String?
 ) : FirebaseRecyclerAdapter<Message, FirebaseMessageAdapter.MessageViewHolder>(options) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val view = inflater.inflate(R.layout.item_message, parent, false)
-        val binding = ItemMessageBinding.bind(view)
+        val binding = ItemMessageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MessageViewHolder(binding)
     }
 
@@ -37,30 +33,30 @@ class FirebaseMessageAdapter(
     inner class MessageViewHolder(private val binding: ItemMessageBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Message) {
-            binding.tvMessage.text = item.text
-            updateBubblePosition(item.uid)
+            binding.tvMessage.text = item.message
+            updateBubblePosition(item.fromProfileId)
             binding.tvTimestamp.text = item.timestamp?.let {
                 DateUtils.getRelativeTimeSpanString(it)
             }
 
             // Tampilkan nama & foto hanya kalau bukan diri sendiri
-            if (currentUid == item.uid) {
+            if (currentProfileId == item.fromProfileId) {
                 binding.tvMessenger.visibility = View.GONE
                 binding.ivMessenger.visibility = View.GONE
             } else {
                 binding.tvMessenger.visibility = View.VISIBLE
-                binding.tvMessenger.text = item.name
+                binding.tvMessenger.text = item.fromProfileName
                 binding.ivMessenger.visibility = View.VISIBLE
             }
         }
 
 
-        private fun updateBubblePosition(userId: String?) {
+        private fun updateBubblePosition(profileId: String?) {
             val constraintLayout = binding.rootLayout
             val constraintSet = androidx.constraintlayout.widget.ConstraintSet()
             constraintSet.clone(constraintLayout)
 
-            if (currentUid == userId && userId != null) {
+            if (currentProfileId == profileId && profileId != null) {
                 // Chat dari user sendiri → Geser ke kanan
                 constraintSet.clear(binding.tvMessage.id, androidx.constraintlayout.widget.ConstraintSet.START)
                 constraintSet.connect(

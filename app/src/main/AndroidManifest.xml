@@ -16,10 +16,17 @@
         android:theme="@style/Theme.SEPO"
         tools:targetApi="31">
         <activity
-            android:name=".ui.DemographicActivity"
+            android:name=".ui.consult.ReplyDoctorChatActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.consult.ConsultActivity"
+            android:name=".ui.consult.ShowDoctorChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.education.EducationActivity"
+            android:configChanges="orientation|screenSize"
+            android:exported="false" />
+        <activity
+            android:name=".ui.test.DemographicActivity"
             android:exported="false" />
         <activity
             android:name=".ui.profile.CreateProfileActivity"
@@ -51,13 +58,18 @@
             android:exported="false" />
         <activity
             android:name=".ui.main.MainActivity"
+            android:exported="false"/>
+
+        <activity android:name=".ui.splashscreen.SplashActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

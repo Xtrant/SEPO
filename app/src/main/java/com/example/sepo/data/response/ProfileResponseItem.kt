@@ -18,6 +18,12 @@ data class ProfileResponseItem(
     @SerializedName("gender")
     val gender: String,
 
+    @SerializedName("kondisi")
+    val kondisi: String,
+
+    @SerializedName("dokter_id")
+    val dokter_id: String,
+
     @SerializedName("created_at")
     val createdAt: String
 )

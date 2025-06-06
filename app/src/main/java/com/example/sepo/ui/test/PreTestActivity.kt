@@ -20,7 +20,6 @@ import com.example.sepo.ui.adapter.PreTestAdapter
 import com.example.sepo.utils.SessionManager
 import com.example.sepo.utils.showLoading
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 
 class PreTestActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPreTestBinding

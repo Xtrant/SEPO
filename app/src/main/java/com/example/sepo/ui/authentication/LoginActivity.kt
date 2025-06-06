@@ -17,7 +17,6 @@ import androidx.lifecycle.lifecycleScope
 import com.example.sepo.R
 import com.example.sepo.databinding.ActivityLoginBinding
 import com.example.sepo.ui.ViewModelFactory
-import com.example.sepo.ui.main.MainActivity
 import com.example.sepo.ui.profile.SelectProfileActivity
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
@@ -26,7 +25,6 @@ import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.auth.auth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
@@ -140,7 +138,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun updateUI(currentUser: FirebaseUser?) {
         if (currentUser != null) {
-            val intent = Intent(this@LoginActivity, SelectProfileActivity::class.java)
+            val intent = Intent(this, SelectProfileActivity::class.java)
             startActivity(intent)
             finish()
         }

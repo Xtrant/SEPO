@@ -29,10 +29,32 @@ data class UserAnswerPreTest(
 	val hrqPoints : Int
 )
 
-data class Message(
-	val text: String? = null,
-	val name: String? = null,
-	val timestamp: Long? = null,
-	val uid: String? = ""
+data class UserAnswerDemographicTest(
+	val profileName: String,
+	val question: String,
+	val selectedOption: String,
+	val osteoporosisPoints: Int,
+	val osteoarthritisPoints : Int,
+	val answerText : String,
 )
+
+data class Message(
+	val fromUid: String? = null,
+	val fromProfileId: String? = null,
+	val fromProfileName: String? = null,
+	val toDoctorId: String? = null,
+	val toDoctorName: String? = null,
+	val message: String? = null,
+	val timestamp: Long? = null
+)
+
+data class MessageList(
+	val userId: String? = null,
+	val userName: String? = null,
+	val doctorId: String? = null,
+	val fromProfileId: String? = null,
+	val message: String? = null,
+	val timestamp: Long? = null
+)
+
 

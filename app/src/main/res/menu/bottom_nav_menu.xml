@@ -7,9 +7,9 @@
         />
 
     <item
-        android:id="@+id/nav_education"
-        android:icon="@drawable/ic_education"
-        android:title="@string/education"/>
+        android:id="@+id/nav_consult"
+        android:icon="@drawable/ic_consult1"
+        android:title="@string/consult"/>
 
     <item
         android:id="@+id/nav_exercise"

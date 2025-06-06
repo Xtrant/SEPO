@@ -1,7 +1,6 @@
 package com.example.sepo.ui.test
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -21,8 +20,6 @@ import com.example.sepo.ui.adapter.PostTestAdapter
 import com.example.sepo.utils.SessionManager
 import com.example.sepo.utils.showLoading
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestore
 
 class PostTestActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPostTestBinding

@@ -16,13 +16,13 @@ class DoctorAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(doctor: DoctorResponseItem) {
             binding.tvName.text = doctor.name
-            binding.tvSpecial.text = "Spesialis + ${doctor.special}"
+            binding.tvSpecial.text = "Spesialis ${doctor.special}"
             binding.tvHospitalAddress.text = doctor.addressHospital
             binding.tvNumber.text = doctor.numberPhone
             binding.tvDayWork.text = doctor.time
 
             binding.root.setOnClickListener {
-                onItemClick
+                onItemClick(doctor)
             }
         }
     }
