@@ -14,8 +14,16 @@ class ProfileViewModel(private val repo: Repository) : ViewModel() {
     private val _profileResult = MutableLiveData<Result<List<ProfileResponseItem>>>()
     val profileResult: LiveData<Result<List<ProfileResponseItem>>> = _profileResult
 
+    private val _profileSelectResult = MutableLiveData<Result<ProfileResponseItem>>()
+    val profileSelectResult: LiveData<Result<ProfileResponseItem>> = _profileSelectResult
+
+    private val _editProfileResult = MutableLiveData<Result<ConnectionResponse>>()
+    val editProfileResult: LiveData<Result<ConnectionResponse>> = _editProfileResult
+
     private val _createResult = MutableLiveData<Result<ConnectionResponse>>()
     val createResult: LiveData<Result<ConnectionResponse>> = _createResult
+
+
 
     fun createProfile(uid: String, name: String, age: String, gender: String, weight: String, height: String) {
         viewModelScope.launch {
@@ -24,10 +32,24 @@ class ProfileViewModel(private val repo: Repository) : ViewModel() {
         }
     }
 
+    fun editProfile(profileId: Int, name: String, age: String, gender: String, weight: String, height: String) {
+        viewModelScope.launch {
+            _editProfileResult.value = Result.Loading
+            _editProfileResult.value = repo.editProfile(profileId, name, age, gender, weight, height)
+        }
+    }
+
     fun getProfiles(uid: String) {
         viewModelScope.launch {
             _profileResult.value = Result.Loading
             _profileResult.value = repo.getProfiles(uid)
+        }
+    }
+
+    fun getProfilesById(uid: String, profileId: Int) {
+        viewModelScope.launch {
+            _profileSelectResult.value = Result.Loading
+            _profileSelectResult.value = repo.getProfilesById(uid, profileId)
         }
     }
 }

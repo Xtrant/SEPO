@@ -23,6 +23,16 @@
         android:layout_gravity="center"
         android:visibility="gone"/>
 
+    <TextView
+        android:id="@+id/tv_no_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Belum ada profil.\nSilakan klik Tambahkan Akun untuk membuat profil baru sebelum melanjutkan."
+        android:fontFamily="@font/inter_tight_regular"
+        android:textSize="12sp"
+        android:visibility="gone"
+        android:layout_margin="16dp"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvProfiles"
         android:layout_margin="16dp"

@@ -9,6 +9,8 @@ import com.example.sepo.data.response.ConnectionResponse
 import com.example.sepo.data.response.DemographicTestResponseItem
 import com.example.sepo.data.response.PostTestResponseItem
 import com.example.sepo.data.response.PreTestResponseItem
+import com.example.sepo.data.response.ProfileStatusResponse
+import com.example.sepo.data.response.ScoreResponse
 import com.example.sepo.result.Result
 import kotlinx.coroutines.launch
 
@@ -36,6 +38,15 @@ class TestViewModel(private val repository: Repository) : ViewModel() {
 
     private val _saveScore = MutableLiveData<Result<ConnectionResponse>>()
     val saveScore : LiveData<Result<ConnectionResponse>> = _saveScore
+
+    private val _score = MutableLiveData<Result<ScoreResponse>>()
+    val score : LiveData<Result<ScoreResponse>> = _score
+
+    private val _saveProfileStatus = MutableLiveData<Result<ConnectionResponse>>()
+    val saveProfileStatus : LiveData<Result<ConnectionResponse>> = _saveProfileStatus
+
+    private val _profileStatus = MutableLiveData<Result<ProfileStatusResponse>>()
+    val profileStatus : LiveData<Result<ProfileStatusResponse>> = _profileStatus
 
 
     fun getPreTest() {
@@ -109,17 +120,51 @@ class TestViewModel(private val repository: Repository) : ViewModel() {
     fun getSaveScore(
         userId: String,
         profileId: Int,
-        knowledgeScore: Int,
-        behaveScore: Int,
-        hrqScore: Int,
-        osteoporosisScore: Int,
-        osteoarthritisScore: Int,
+        knowledgeScore: Int?,
+        behaveScore: Int?,
+        hrqScore: Int?,
+        osteoporosisScore: Int?,
+        osteoarthritisScore: Int?,
     ) {
         viewModelScope.launch {
             _saveScore.value = Result.Loading
             _saveScore.value = repository.saveScore(userId, profileId, knowledgeScore, behaveScore, hrqScore, osteoporosisScore, osteoarthritisScore)
         }
     }
+
+    fun getSaveProfileStatus(
+        userId: String,
+        profileId: Int,
+        isPreTest: Int?,
+        isPostTest: Int?,
+        isEducation: Int?
+    ) {
+        viewModelScope.launch {
+            _saveProfileStatus.value = Result.Loading
+            _saveProfileStatus.value = repository.saveProfileStatus(userId, profileId, isPreTest, isPostTest, isEducation)
+        }
+    }
+
+    fun getScore(
+        userId: String,
+        profileId: Int,
+    ) {
+        viewModelScope.launch {
+            _score.value = Result.Loading
+            _score.value = repository.getScore(userId, profileId)
+        }
+    }
+
+    fun getProfileStatus(
+        userId: String,
+        profileId: Int,
+    ) {
+        viewModelScope.launch {
+            _profileStatus.value = Result.Loading
+            _profileStatus.value = repository.getProfileStatus(userId, profileId)
+        }
+    }
+
 
 
 }

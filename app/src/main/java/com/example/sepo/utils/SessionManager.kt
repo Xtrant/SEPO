@@ -51,11 +51,34 @@ class SessionManager(context: Context) {
             remove(KEY_PROFILE_ID)
             remove(KEY_PROFILE_NAME)
             remove(KEY_PROFILE_CONDITION)
+            remove(KEY_WATCHED_VIDEOS)
         }
     }
 
+    fun editSession() {
+        prefs.edit {
+            remove(KEY_PROFILE_ID)
+            remove(KEY_PROFILE_NAME)
 
+        }
+    }
 
+    fun addWatchedVideo(videoId: String) {
+        val watched = prefs.getStringSet(KEY_WATCHED_VIDEOS, mutableSetOf())?.toMutableSet() ?: mutableSetOf()
+        watched.add(videoId)
+        prefs.edit {
+            putStringSet(KEY_WATCHED_VIDEOS, watched)
+        }
+    }
+
+    fun getWatchedVideos(): Set<String> {
+        return prefs.getStringSet(KEY_WATCHED_VIDEOS, emptySet()) ?: emptySet()
+    }
+
+    fun isAllVideosWatched(videoIds: List<String>): Boolean {
+        val watched = getWatchedVideos()
+        return videoIds.all { watched.contains(it) }
+    }
 
     companion object {
         private const val PREF_NAME = "user_session"
@@ -64,5 +87,8 @@ class SessionManager(context: Context) {
         private const val KEY_PROFILE_CONDITION = "profile_condition"
         private const val KEY_FIRST_LAUNCH = "first_launch"
         private const val KEY_FIRST_APP_RUN = "first_app_run"
+
+        // Tambahan untuk video
+        private const val KEY_WATCHED_VIDEOS = "watched_videos"
     }
 }

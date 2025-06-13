@@ -7,6 +7,8 @@ import com.example.sepo.data.response.ListUserResponseItem
 import com.example.sepo.data.response.PostTestResponseItem
 import com.example.sepo.data.response.PreTestResponseItem
 import com.example.sepo.data.response.ProfileResponseItem
+import com.example.sepo.data.response.ProfileStatusResponse
+import com.example.sepo.data.response.ScoreResponse
 import com.example.sepo.data.response.VideoResponseItem
 import com.example.sepo.data.retrofit.ApiService
 import com.example.sepo.result.Result
@@ -39,6 +41,22 @@ class Repository(private val apiService: ApiService) {
         }
     }
 
+    suspend fun editProfile(
+        profileId: Int,
+        profileName: String,
+        age: String,
+        gender: String,
+        weight: String,
+        height: String
+    ): Result<ConnectionResponse> {
+        return try {
+            val response = apiService.editProfile(profileId, profileName, age, gender, weight, height)
+            Result.Success(response)
+        } catch (e: HttpException) {
+            Result.Error(e.toString())
+        }
+    }
+
     suspend fun saveCondition(
         userId: String,
         profileId: Int,
@@ -55,6 +73,15 @@ class Repository(private val apiService: ApiService) {
     suspend fun getProfiles(userId: String): Result<List<ProfileResponseItem>> {
         return try {
             val response = apiService.getProfiles(userId)
+            Result.Success(response)
+        } catch (e: HttpException) {
+            Result.Error(e.toString())
+        }
+    }
+
+    suspend fun getProfilesById(userId: String, profileId: Int): Result<ProfileResponseItem> {
+        return try {
+            val response = apiService.getProfilesById(userId, profileId)
             Result.Success(response)
         } catch (e: HttpException) {
             Result.Error(e.toString())
@@ -147,14 +174,47 @@ class Repository(private val apiService: ApiService) {
     suspend fun saveScore(
         userId: String,
         profileId: Int,
-        knowledgeScore: Int,
-        behaveScore: Int,
-        hrqScore: Int,
-        osteoporosisScore: Int,
-        osteoarthritisScore: Int,
+        knowledgeScore: Int?,
+        behaveScore: Int?,
+        hrqScore: Int?,
+        osteoporosisScore: Int?,
+        osteoarthritisScore: Int?,
     ): Result<ConnectionResponse> {
         return try {
             val response = apiService.saveScore(userId, profileId, knowledgeScore, behaveScore, hrqScore, osteoporosisScore, osteoarthritisScore)
+            Result.Success(response)
+        } catch (e: HttpException) {
+            Result.Error(e.toString())
+        }
+    }
+
+    suspend fun getScore(userId: String, profileId: Int): Result<ScoreResponse> {
+        return try {
+            val response = apiService.getScore(userId, profileId)
+            Result.Success(response)
+        } catch (e: HttpException) {
+            Result.Error(e.toString())
+        }
+    }
+
+    suspend fun saveProfileStatus(
+        userId: String,
+        profileId: Int,
+        isPreTest: Int?,
+        isPostTest: Int?,
+        isEducation: Int?
+    ): Result<ConnectionResponse> {
+        return try {
+            val response = apiService.saveProfileStatus(userId, profileId , isPreTest, isPostTest, isEducation)
+            Result.Success(response)
+        } catch (e: HttpException) {
+            Result.Error(e.toString())
+        }
+    }
+
+    suspend fun getProfileStatus(userId: String, profileId: Int): Result<ProfileStatusResponse> {
+        return try {
+            val response = apiService.getProfileStatus(userId, profileId)
             Result.Success(response)
         } catch (e: HttpException) {
             Result.Error(e.toString())

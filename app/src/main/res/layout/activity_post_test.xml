@@ -1,49 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/main"
-    android:fillViewport="true"
-    tools:context=".ui.test.PostTestActivity">
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".ui.test.PreTestActivity">
 
-    <FrameLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:overScrollMode="never"
+        tools:listitem="@layout/item_questions"
+        tools:itemCount="5" />
 
-        <!-- ProgressBar di tengah layar -->
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_sbmt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:visibility="gone"
+        android:backgroundTint="#82628E"
+        android:text="Submit" />
 
-        <!-- Konten utama -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                android:overScrollMode="never"
-                tools:listitem="@layout/item_questions"
-                tools:itemCount="5"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_sbmt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:backgroundTint="#82628E"
-                android:visibility="gone"
-                android:text="Submit"/>
-
-        </LinearLayout>
-
-    </FrameLayout>
-</androidx.core.widget.NestedScrollView>
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+</LinearLayout>

@@ -21,10 +21,10 @@
             <ImageView
                 android:id="@+id/iv_profile"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:layout_marginHorizontal="12dp"
                 android:layout_marginTop="12dp"
-                android:src="@drawable/ic_profile"
+                android:src="@drawable/profile_doctor"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 

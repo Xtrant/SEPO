@@ -30,7 +30,7 @@ data class UserAnswerPreTest(
 )
 
 data class UserAnswerDemographicTest(
-	val profileName: String,
+	val profileName: String?,
 	val question: String,
 	val selectedOption: String,
 	val osteoporosisPoints: Int,

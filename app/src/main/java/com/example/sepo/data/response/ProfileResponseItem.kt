@@ -15,6 +15,12 @@ data class ProfileResponseItem(
     @SerializedName("age")
     val age: Int,
 
+    @SerializedName("tinggi_badan")
+    val tinggiBadan: Int,
+
+    @SerializedName("berat_badan")
+    val beratBadan: Int,
+
     @SerializedName("gender")
     val gender: String,
 
@@ -22,7 +28,7 @@ data class ProfileResponseItem(
     val kondisi: String,
 
     @SerializedName("dokter_id")
-    val dokter_id: String,
+    val dokterId: String,
 
     @SerializedName("created_at")
     val createdAt: String

@@ -11,8 +11,11 @@ import com.example.sepo.data.response.PostTestResponseItem
 import com.example.sepo.databinding.ItemQuestionsBinding
 
 class PostTestAdapter(
-    private val onOptionSelected: (PostTestResponseItem, String) -> Unit // Kirim jawaban yang dipilih (opsi string)
+    private val onOptionSelected: (PostTestResponseItem, String) -> Unit
 ) : ListAdapter<PostTestResponseItem, PostTestAdapter.QuestionViewHolder>(DIFF_CALLBACK) {
+
+    // Simpan jawaban yang dipilih: key = position, value = jawaban
+    private val selectedAnswers: MutableMap<Int, String> = mutableMapOf()
 
     inner class QuestionViewHolder(val binding: ItemQuestionsBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -24,21 +27,29 @@ class PostTestAdapter(
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: QuestionViewHolder, position: Int) {
         val questionItem = getItem(position)
+        val binding = holder.binding
 
-        holder.binding.title.text = "Pertanyaan ${position + 1}"
-        holder.binding.question.text = questionItem.question ?: ""
-        holder.binding.answer.removeAllViews()
+        binding.title.text = "Pertanyaan ${position + 1}"
+        binding.question.text = questionItem.question ?: ""
+        binding.answer.removeAllViews()
+
+        val selectedOption = selectedAnswers[position]  // Jawaban yang sudah dipilih
 
         questionItem.options?.forEach { optionText ->
-            val radioButton = RadioButton(holder.binding.root.context).apply {
-                text = optionText ?: ""
-                isChecked = false
+            val option = optionText ?: return@forEach
+
+            val radioButton = RadioButton(binding.root.context).apply {
+                text = option
+                isChecked = option == selectedOption
 
                 setOnClickListener {
-                    onOptionSelected(questionItem, optionText ?: "")
+                    selectedAnswers[position] = option
+                    notifyItemChanged(position) // Update item untuk refleksi UI
+                    onOptionSelected(questionItem, option)
                 }
             }
-            holder.binding.answer.addView(radioButton)
+
+            binding.answer.addView(radioButton)
         }
     }
 

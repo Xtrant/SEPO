@@ -7,6 +7,8 @@ import com.example.sepo.data.response.ListUserResponseItem
 import com.example.sepo.data.response.PostTestResponseItem
 import com.example.sepo.data.response.PreTestResponseItem
 import com.example.sepo.data.response.ProfileResponseItem
+import com.example.sepo.data.response.ProfileStatusResponse
+import com.example.sepo.data.response.ScoreResponse
 import com.example.sepo.data.response.VideoResponseItem
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -31,18 +33,34 @@ interface ApiService {
     ): ConnectionResponse
 
     @FormUrlEncoded
+    @POST("edit_profile.php")
+    suspend fun editProfile(
+        @Field("profile_id") profileId: Int,
+        @Field("profile_name") name: String,
+        @Field("age") age: String,
+        @Field("gender") gender: String,
+        @Field("berat") weight: String,
+        @Field("tinggi") height: String,
+    ): ConnectionResponse
+
+    @GET("select_profile_id.php")
+    suspend fun getProfilesById(
+        @Query("user_id") uId: String,
+        @Query("profile_id") profileId: Int
+    ): ProfileResponseItem
+
+    @GET("list_profiles.php")
+    suspend fun getProfiles(
+        @Query("user_id") uId: String
+    ): List<ProfileResponseItem>
+
+    @FormUrlEncoded
     @POST("insert_condition.php")
     suspend fun saveCondition(
         @Field("user_id") uId: String,
         @Field("profile_id") profileId: Int,
         @Field("kondisi") condition: String,
     ): ConnectionResponse
-
-
-    @GET("list_profiles.php")
-    suspend fun getProfiles(
-        @Query("user_id") uId: String
-    ): List<ProfileResponseItem>
 
     @FormUrlEncoded
     @POST("save_user.php")
@@ -94,12 +112,34 @@ interface ApiService {
     suspend fun saveScore(
         @Field("user_id") userId: String,
         @Field("profile_id") profileId: Int,
-        @Field("knowledge_score") knowledgeScore: Int,
-        @Field("behave_score") behaveScore: Int,
-        @Field("hrq_score") hrqScore: Int,
-        @Field("osteoporosis_score") osteoporosisScore: Int,
-        @Field("osteoarthritis_score") osteoarthritisScore: Int,
+        @Field("knowledge_score") knowledgeScore: Int?,
+        @Field("behave_score") behaveScore: Int?,
+        @Field("hrq_score") hrqScore: Int?,
+        @Field("osteoporosis_score") osteoporosisScore: Int?,
+        @Field("osteoarthritis_score") osteoarthritisScore: Int?,
     ): ConnectionResponse
+
+    @GET("list_score.php")
+    suspend fun getScore(
+        @Query("user_id") uId: String,
+        @Query("profile_id") profileId: Int
+    ): ScoreResponse
+
+    @FormUrlEncoded
+    @POST("update_profile_status.php")
+    suspend fun saveProfileStatus(
+        @Field("user_id") userId: String,
+        @Field("profile_id") profileId: Int,
+        @Field("is_pretest") isPretest: Int?,
+        @Field("is_posttest") isPostTest: Int?,
+        @Field("is_completed_education") isEducation: Int?
+    ): ConnectionResponse
+
+    @GET("get_profile_status.php")
+    suspend fun getProfileStatus(
+        @Query("user_id") uId: String,
+        @Query("profile_id") profileId: Int
+    ): ProfileStatusResponse
 
     @GET("list_doctor.php")
     suspend fun getDoctor() : List<DoctorResponseItem>

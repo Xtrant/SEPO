@@ -28,6 +28,7 @@ import com.google.firebase.ktx.Firebase
 class SelectProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySelectProfileBinding
     private lateinit var auth: FirebaseAuth
+    private lateinit var adapter: ProfileAdapter
     private val viewModel: ProfileViewModel by viewModels {
         ViewModelFactory.getInstance(application)
     }
@@ -57,6 +58,8 @@ class SelectProfileActivity : AppCompatActivity() {
         super.onResume()
         val userId = auth.currentUser?.uid
 
+        observeProfiles()
+
         viewModel.getProfiles(userId.toString())
     }
 
@@ -70,39 +73,51 @@ class SelectProfileActivity : AppCompatActivity() {
                 is Result.Success -> {
                     showLoading(false, binding.progressBar)
                     binding.btnAddProfile.visibility = View.VISIBLE
-                    val adapter = ProfileAdapter(result.data) { profile ->
-                        Toast.makeText(
-                            this,
-                            "Profil ${profile.profileName} dipilih",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        val session = SessionManager(this)
-                        session.saveSession(profile.profileId, profile.profileName)
-                        val uId = auth.currentUser?.uid
 
-                        if (uId == "tX7f0bYtfBO2Hl69wnX3QtN1KWl2") {
-                            val intent = Intent(this, ShowDoctorChatActivity::class.java)
-                            intent.putExtra("doctor_id", profile.dokter_id)
-                            startActivity(intent)
+                    if (result.data.isNotEmpty()) {
+                        binding.rvProfiles.visibility = View.VISIBLE
+                        binding.tvNoProfile.visibility = View.GONE
+                        adapter = ProfileAdapter(result.data) { profile ->
+                            Toast.makeText(
+                                this,
+                                "Profil ${profile.profileName} dipilih",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            val session = SessionManager(this)
+                            session.saveSession(profile.profileId, profile.profileName)
+                            val uId = auth.currentUser?.uid
 
-                        } else {
-
-                            if (profile.kondisi.isNotEmpty()) {
-                                session.saveConditionSession(profile.kondisi)
-                                val intent = Intent(this, MainActivity::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            if (uId == "tX7f0bYtfBO2Hl69wnX3QtN1KWl2") {
+                                val intent = Intent(this, ShowDoctorChatActivity::class.java)
+                                intent.putExtra("doctor_id", profile.dokterId)
                                 startActivity(intent)
 
                             } else {
-                                val intent = Intent(this, DemographicActivity::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                startActivity(intent)
 
+                                if (profile.kondisi.isNotEmpty()) {
+                                    session.saveConditionSession(profile.kondisi)
+                                    val intent = Intent(this, MainActivity::class.java)
+                                    intent.flags =
+                                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                    startActivity(intent)
+
+                                } else {
+                                    val intent = Intent(this, DemographicActivity::class.java)
+                                    intent.flags =
+                                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                    startActivity(intent)
+
+                                }
                             }
+
                         }
+                            binding.rvProfiles.layoutManager = LinearLayoutManager(this)
+                            binding.rvProfiles.adapter = adapter
+                        }
+                    else {
+                        binding.rvProfiles.visibility = View.GONE
+                        binding.tvNoProfile.visibility = View.VISIBLE
                     }
-                    binding.rvProfiles.layoutManager = LinearLayoutManager(this)
-                    binding.rvProfiles.adapter = adapter
                 }
 
                 is Result.Error -> {

@@ -1,5 +1,6 @@
 package com.example.sepo.ui.bottomnav
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sepo.databinding.FragmentExerciseBinding
 import com.example.sepo.result.Result
 import com.example.sepo.ui.ViewModelFactory
-import com.example.sepo.ui.adapter.ExerciseAdapter
+import com.example.sepo.ui.adapter.RecommendAdapter
+import com.example.sepo.ui.education.EducationActivity
+import com.example.sepo.ui.exercise.DetailExerciseActivity
 import com.example.sepo.ui.list.ListUserViewModel
 import com.example.sepo.utils.showLoading
 
@@ -27,7 +30,7 @@ class ExerciseFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        _binding = FragmentExerciseBinding.inflate(inflater, container,false)
+        _binding = FragmentExerciseBinding.inflate(inflater, container, false)
         return binding?.root
     }
 
@@ -48,15 +51,20 @@ class ExerciseFragment : Fragment() {
 
                 is Result.Success -> {
                     showLoading(false, binding?.progressBar)
-                    val adapter = ExerciseAdapter(
-                        result.data
-                    )
-                    binding?.rvMateri?.layoutManager = LinearLayoutManager(requireContext())
-                    binding?.rvMateri?.adapter = adapter
+                    val adapter = RecommendAdapter(result.data, requireContext()) { video ->
+
+                        startActivity(Intent(requireContext(), DetailExerciseActivity::class.java))
+
+
+                    }
+                    binding?.rvExerciseOsteoporosis?.layoutManager = LinearLayoutManager(context)
+                    binding?.rvExerciseOsteoporosis?.adapter = adapter
                 }
+
 
                 is Result.Error -> {
                     showLoading(false, binding?.progressBar)
+
                 }
             }
         }

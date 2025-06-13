@@ -1,4 +1,4 @@
-package com.example.sepo.ui.education
+package com.example.sepo.ui.exercise
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -8,6 +8,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.sepo.R
+import com.example.sepo.databinding.ActivityDetailExerciseBinding
 import com.example.sepo.databinding.ActivityEducationBinding
 import com.example.sepo.result.Result
 import com.example.sepo.ui.ViewModelFactory
@@ -19,21 +20,21 @@ import com.example.sepo.utils.showLoading
 import com.google.firebase.auth.FirebaseAuth
 import kotlin.getValue
 
-class EducationActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityEducationBinding
+class DetailExerciseActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityDetailExerciseBinding
     private val viewModel: ListUserViewModel by viewModels {
         ViewModelFactory.getInstance(application)
     }
+
     private val viewModelProfile: TestViewModel by viewModels {
         ViewModelFactory.getInstance(application)
     }
-
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityEducationBinding.inflate(layoutInflater)
+        binding = ActivityDetailExerciseBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -43,13 +44,13 @@ class EducationActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-        viewModel.listEdukasi()
+        viewModel.listExercise()
 
         observeViewModel()
     }
 
     private fun observeViewModel() {
-        viewModel.resultListEdukasi.observe(this) { result ->
+        viewModel.resultListExercise.observe(this) { result ->
             when (result) {
                 is Result.Loading -> {
                     showLoading(true, binding.progressBar)
@@ -61,11 +62,10 @@ class EducationActivity : AppCompatActivity() {
                         result.data,
                         activity = this,
                         fullscreenContainer = binding.fullscreenContainer,
-
-                        viewModelProfile,
-                        SessionManager(this))
-                    binding.rvMateriEdukasi.layoutManager = LinearLayoutManager(this)
-                    binding.rvMateriEdukasi.adapter = adapter
+                        viewModel = viewModelProfile,
+                        sessionManager = SessionManager(this))
+                    binding.rvMateri.layoutManager = LinearLayoutManager(this)
+                    binding.rvMateri.adapter = adapter
                 }
 
                 is Result.Error -> {

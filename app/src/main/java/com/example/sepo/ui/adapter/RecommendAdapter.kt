@@ -7,15 +7,20 @@ import com.bumptech.glide.Glide
 import com.example.sepo.R
 import com.example.sepo.data.response.VideoResponseItem
 import com.example.sepo.databinding.ItemVideoBinding
+import com.example.sepo.utils.SessionManager
 
 class RecommendAdapter(
     private val list: List<VideoResponseItem>,
+    private val context: android.content.Context,
     private val onItemClick: (VideoResponseItem) -> Unit
+
 
     ) : RecyclerView.Adapter<RecommendAdapter.RecommendViewHolder>() {
 
     inner class RecommendViewHolder(val binding: ItemVideoBinding) :
         RecyclerView.ViewHolder(binding.root) {
+        private val sessionManager = SessionManager(context)
+
 
         fun bind(video: VideoResponseItem) {
             // Tampilkan data
@@ -25,6 +30,7 @@ class RecommendAdapter(
             binding.tvName.text = video.title
             binding.tvDuration.text = video.duration
             binding.tvCategory.text = video.category
+            video.isWatched = sessionManager.getWatchedVideos().contains(video.id.toString())
             binding.tvView.text = if (video.isWatched) "Sudah ditonton" else "Belum ditonton"
 
             // Toggle visibilitas saat diklik

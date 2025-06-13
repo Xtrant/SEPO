@@ -20,5 +20,7 @@ data class PostTestResponseItem(
 	val id: Int,
 
 	@field:SerializedName("correctAnswer")
-	val correctAnswer: String? = null
+	val correctAnswer: String? = null,
+
+	var selectedOptionText: String? = null
 )

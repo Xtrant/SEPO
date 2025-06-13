@@ -48,13 +48,13 @@ class PreTestActivity : AppCompatActivity() {
 
         viewModel.getPreTest()
 
-        auth = FirebaseAuth.getInstance()
+
 
         setupRecyclerView()
-//        loadQuestionsFromFirestore()
-//
+
         binding.btnSbmt.setOnClickListener {
-            calculateScore()
+
+            submitAnswers()
         }
     }
 
@@ -134,21 +134,52 @@ class PreTestActivity : AppCompatActivity() {
         viewModel.getSaveScore(
             userId.toString(),
             profileId,
-            0,
+            null,
             behaveTotalScore,
             hrqTotalScore,
-            0,
-            0
+            null,
+            null
         )
 
         showResultDialog(scoreMessage)
+    }
+    private fun submitAnswers() {
+        val questions = adapter.currentList.toMutableList()
+
+        val firstInvalidIndex = questions.indexOfFirst { question ->
+            val answer = userAnswers.find { it.question == question.question }
+            answer == null || (answer.selectedOption.isEmpty())
+        }
+
+        if (firstInvalidIndex != -1) {
+            adapter.submitList(questions.toList()) {
+                binding.recyclerView.post {
+                    binding.recyclerView.scrollToPosition(firstInvalidIndex)
+                }
+            }
+
+
+            Toast.makeText(this, "Harap lengkapi semua pertanyaan", Toast.LENGTH_SHORT).show()
+            return
+        }
+        auth = FirebaseAuth.getInstance()
+        val uId = auth.currentUser?.uid
+
+        val session = SessionManager(this)
+        val profileId = session.getProfileId()
+
+        viewModel.getSaveProfileStatus(uId.toString(), profileId, 1, null, null)
+        // Semua terisi, lanjut simpan
+        calculateScore()
     }
 
     private fun showResultDialog(message: String) {
         AlertDialog.Builder(this)
             .setTitle("Hasil Pre-Test")
             .setMessage(message)
-            .setPositiveButton("OK", null)
+            .setPositiveButton("OK") {_,_ -> finish()
+
+            }
             .show()
     }
 }

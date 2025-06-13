@@ -17,7 +17,10 @@ data class PreTestResponseItem(
 	val options: List<OptionsItem?>? = null,
 
 	@field:SerializedName("id")
-	val id: Int
+	val id: Int,
+
+	var selectedOptionText: String? = null
+
 )
 
 data class OptionsItem(

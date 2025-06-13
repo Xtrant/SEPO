@@ -84,7 +84,7 @@ class DemographicActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         adapter =
-            DemographicAdapter { question, answerText, osteoporosisPoints, osteoarthritisPoints, answerEditText ->
+            DemographicAdapter(userAnswers) { question, answerText, osteoporosisPoints, osteoarthritisPoints, answerEditText ->
                 saveUserAnswer(question, answerText, osteoporosisPoints, osteoarthritisPoints, answerEditText)
             }
 
@@ -159,9 +159,9 @@ class DemographicActivity : AppCompatActivity() {
         viewModel.getSaveScore(
             userId.toString(),
             profileId,
-            0,
-            0,
-            0,
+            null,
+            null,
+            null,
             osteoporosisTotalScore,
             osteoarthritisTotalScore
         )
@@ -192,21 +192,18 @@ class DemographicActivity : AppCompatActivity() {
         }
 
         if (firstInvalidIndex != -1) {
-            questions[firstInvalidIndex].isError = true
-            adapter.submitList(questions.toList()) {
-                binding.recyclerView.post {
-                    binding.recyclerView.scrollToPosition(firstInvalidIndex)
-                }
+            binding.recyclerView.post {
+                binding.recyclerView.smoothScrollToPosition(firstInvalidIndex)
             }
-
-
             Toast.makeText(this, "Harap lengkapi semua pertanyaan", Toast.LENGTH_SHORT).show()
-            return
+
         }
 
+        else {
 
         // Semua terisi, lanjut simpan
         calculateScore()
+            }
     }
 
 }

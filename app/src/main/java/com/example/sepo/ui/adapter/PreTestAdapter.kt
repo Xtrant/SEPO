@@ -11,8 +11,10 @@ import com.example.sepo.data.response.PreTestResponseItem
 import com.example.sepo.databinding.ItemQuestionsBinding
 
 class PreTestAdapter(
-    private val onOptionSelected: (PreTestResponseItem, String, Int, Int) -> Unit // Kirim jawaban yang dipilih (opsi string)
+    private val onOptionSelected: (PreTestResponseItem, String, Int, Int) -> Unit
 ) : ListAdapter<PreTestResponseItem, PreTestAdapter.QuestionViewHolder>(DIFF_CALLBACK) {
+
+    private val selectedAnswers: MutableMap<Int, String> = mutableMapOf()
 
     inner class QuestionViewHolder(val binding: ItemQuestionsBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -24,24 +26,30 @@ class PreTestAdapter(
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: QuestionViewHolder, position: Int) {
         val questionItem = getItem(position)
+        val binding = holder.binding
 
-        holder.binding.title.text = "Pertanyaan ${position + 1}"
-        holder.binding.question.text = questionItem.question ?: ""
-        holder.binding.answer.removeAllViews()
+        binding.title.text = "Pertanyaan ${position + 1}"
+        binding.question.text = questionItem.question ?: ""
+        binding.answer.removeAllViews()
 
-        questionItem.options?.forEach { optionText ->
-            val radioButton = RadioButton(holder.binding.root.context).apply {
-                text = optionText?.text ?: ""
-                isChecked = false
+        val selectedOption = selectedAnswers[position]
 
+        questionItem.options?.forEach { option ->
+            val optionText = option?.text ?: return@forEach
+            val behavePoints = option.behavePoints ?: 0
+            val hrqPoints = option.hrqPoints ?: 0
+
+            val radioButton = RadioButton(binding.root.context).apply {
+                text = optionText
+                isChecked = selectedOption == optionText
                 setOnClickListener {
-                    val behavePoints = optionText?.behavePoints ?: 0
-                    val hrqPoints = optionText?.hrqPoints ?: 0
-                    val answerText = optionText?.text ?: "Jawaban tidak ditemukan"
-                    onOptionSelected(questionItem,answerText, behavePoints, hrqPoints)
+                    selectedAnswers[position] = optionText
+                    onOptionSelected(questionItem, optionText, behavePoints, hrqPoints)
+                    notifyItemChanged(position)
                 }
             }
-            holder.binding.answer.addView(radioButton)
+
+            binding.answer.addView(radioButton)
         }
     }
 

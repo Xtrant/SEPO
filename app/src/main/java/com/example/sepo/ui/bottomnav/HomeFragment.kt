@@ -11,6 +11,7 @@ import android.text.style.TypefaceSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -24,6 +25,7 @@ import com.example.sepo.ui.education.EducationActivity
 import com.example.sepo.ui.list.ListUserViewModel
 import com.example.sepo.ui.test.PostTestActivity
 import com.example.sepo.ui.test.PreTestActivity
+import com.example.sepo.ui.test.TestViewModel
 import com.example.sepo.utils.SessionManager
 import com.example.sepo.utils.showLoading
 import com.google.firebase.auth.FirebaseAuth
@@ -35,7 +37,13 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding
     private lateinit var auth: FirebaseAuth
+    private var isPostTest = 0
+    private var isPreTest = 0
+    private var isEducation = 0
     private val viewModel: ListUserViewModel by viewModels {
+        ViewModelFactory.getInstance(requireActivity().application)
+    }
+    private val viewModelStatus: TestViewModel by viewModels {
         ViewModelFactory.getInstance(requireActivity().application)
     }
 
@@ -54,6 +62,15 @@ class HomeFragment : Fragment() {
         auth = Firebase.auth
     }
 
+    override fun onResume() {
+        super.onResume()
+        val uId = auth.currentUser?.uid
+
+        val session = SessionManager(requireContext())
+        val profileId = session.getProfileId()
+        viewModelStatus.getProfileStatus(uId.toString(), profileId)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -66,24 +83,55 @@ class HomeFragment : Fragment() {
         setTitleGreeting()
 
         binding?.icPostTest?.setOnClickListener {
-            startActivity(Intent(requireContext(), PostTestActivity::class.java))
+            if (isPreTest == 0 || isEducation == 0 ) {
+                showDialog(
+                    "Pre-Test dan Edukasi Wajib Diselesaikan",
+                    "Untuk melanjutkan ke materi Post Test, Anda diwajibkan menyelesaikan Pre-Test dan Menonton Semua Video Edukasi terlebih dahulu."
+                )
+            } else {
+                startActivity(Intent(requireContext(), PostTestActivity::class.java))
+            }
         }
 
         binding?.icPreTest?.setOnClickListener {
             startActivity(Intent(requireContext(), PreTestActivity::class.java))
         }
         binding?.icEdukasi?.setOnClickListener {
-            startActivity(Intent(requireContext(), EducationActivity::class.java))
+            if (isPreTest == 0) {
+                showDialog(
+                    "Pre-Test Wajib Diselesaikan",
+                    "Untuk melanjutkan ke materi Edukasi, Anda diwajibkan menyelesaikan Pre-Test terlebih dahulu."
+                )
+
+            } else {
+                startActivity(Intent(requireContext(), EducationActivity::class.java))
+            }
         }
 
         binding?.viewAll?.setOnClickListener {
-            startActivity(Intent(requireContext(), EducationActivity::class.java))
+            if (isPreTest == 0) {
+                showDialog(
+                    "Pre-Test Wajib Diselesaikan",
+                    "Untuk melanjutkan ke materi Edukasi, Anda diwajibkan menyelesaikan Pre-Test terlebih dahulu."
+                )
+            } else {
+
+                startActivity(Intent(requireContext(), EducationActivity::class.java))
+            }
+
+
         }
+
+        val uId = auth.currentUser?.uid
+
+        val session = SessionManager(requireContext())
+        val profileId = session.getProfileId()
 
         viewModel.listEdukasi()
 
-        observeViewModel()
+        viewModelStatus.getProfileStatus(uId.toString(), profileId)
 
+        observeViewModel()
 
     }
 
@@ -96,12 +144,49 @@ class HomeFragment : Fragment() {
 
                 is Result.Success -> {
                     showLoading(false, binding?.progressBar)
-                    val adapter = RecommendAdapter(result.data) { video ->
-                        startActivity(Intent(requireContext(), EducationActivity::class.java))
+                    val adapter = RecommendAdapter(result.data, requireContext()) { video ->
+                        if (isPreTest == 0) {
+                            showDialog(
+                                "Pre-Test Wajib Diselesaikan",
+                                "Untuk melanjutkan ke materi Edukasi, Anda diwajibkan menyelesaikan Pre-Test terlebih dahulu."
+                            )
+                        } else {
+
+                            startActivity(Intent(requireContext(), EducationActivity::class.java))
+                        }
 
                     }
                     binding?.rvMateri?.layoutManager = LinearLayoutManager(context)
                     binding?.rvMateri?.adapter = adapter
+                }
+
+
+                is Result.Error -> {
+                    showLoading(false, binding?.progressBar)
+
+                }
+            }
+        }
+
+        viewModelStatus.profileStatus.observe(viewLifecycleOwner) { result ->
+            when (result) {
+                is Result.Loading -> {
+                    showLoading(true, binding?.progressBar)
+                }
+
+                is Result.Success -> {
+                    showLoading(false, binding?.progressBar)
+                    isPreTest = result.data.isPretest
+                    isPostTest = result.data.isPostTest
+                    isEducation = result.data.isCompletedEducation
+
+                    if (isPreTest == 1) {
+                        binding?.icEdukasi?.setImageResource(R.drawable.ic_education_on)
+                    }
+
+                    if (isPreTest == 1 && isEducation == 1) {
+                        binding?.icPostTest?.setImageResource(R.drawable.ic_post_test_on)
+                    }
                 }
 
 
@@ -190,15 +275,27 @@ class HomeFragment : Fragment() {
         binding?.btnLatihan?.text = spannableLatihan
     }
 
+    private fun showDialog(title: String, message: String) {
+
+        AlertDialog.Builder(requireContext())
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("Mengerti") { dialog, _ -> dialog.dismiss() }
+            .show()
+    }
+
     private fun setBackgroundCardView() {
         binding?.cvHome?.setBackgroundResource(R.drawable.rounded_card)
     }
 
     private fun setTitleGreeting() {
-        val profileName = arguments?.getString("profile_name")
         val session = SessionManager(requireContext())
+        val profileName = session.getProfileName()
         val kondisi = session.getCondition()
 
-        binding?.tvTitleGreeting?.text = getString(R.string.title_greeting_user, profileName)  + "\n\n Kamu $kondisi "
+        binding?.tvTitleGreeting?.text =
+            getString(R.string.title_greeting_user, profileName) + "\n\n Kamu $kondisi "
     }
 }
+
+

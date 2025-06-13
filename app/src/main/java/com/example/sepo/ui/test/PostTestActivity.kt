@@ -50,8 +50,16 @@ class PostTestActivity : AppCompatActivity() {
 
         setupRecyclerView()
 
+        val uId = auth.currentUser?.uid
+
+        val session = SessionManager(this)
+        val profileId = session.getProfileId()
+
+        setupRecyclerView()
+
         binding.btnSbmt.setOnClickListener {
-            calculateScore()
+            viewModel.getSaveProfileStatus(uId.toString(), profileId, null, 1, null)
+            submitAnswers()
         }
 
     }
@@ -129,10 +137,10 @@ class PostTestActivity : AppCompatActivity() {
             userId.toString(),
             profileId,
             score,
-            0,
-            0,
-            0,
-            0
+            null,
+            null,
+            null,
+            null
         )
 
         val scoreMessage = "Skor Anda = $score"
@@ -140,11 +148,36 @@ class PostTestActivity : AppCompatActivity() {
         showResultDialog(scoreMessage)
     }
 
+    private fun submitAnswers() {
+        val questions = adapter.currentList.toMutableList()
+
+        val firstInvalidIndex = questions.indexOfFirst { question ->
+            val answer = userAnswers.find { it.question == question.question }
+            answer == null || (answer.selectedOption.isEmpty())
+        }
+
+        if (firstInvalidIndex != -1) {
+            adapter.submitList(questions.toList()) {
+                binding.recyclerView.post {
+                    binding.recyclerView.scrollToPosition(firstInvalidIndex)
+                }
+            }
+
+
+            Toast.makeText(this, "Harap lengkapi semua pertanyaan", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+
+        // Semua terisi, lanjut simpan
+        calculateScore()
+    }
+
     private fun showResultDialog(message: String) {
         AlertDialog.Builder(this)
             .setTitle("Hasil Post-Test")
             .setMessage(message)
-            .setPositiveButton("OK", null)
+            .setPositiveButton("OK") {_,_ -> finish()}
             .show()
     }
 

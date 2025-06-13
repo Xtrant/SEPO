@@ -33,7 +33,6 @@ import kotlinx.coroutines.launch
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
     private lateinit var auth: FirebaseAuth
-    private lateinit var db: FirebaseFirestore
     private val viewModel: AuthViewModel by viewModels {
         ViewModelFactory.getInstance(application)
     }
@@ -51,8 +50,6 @@ class LoginActivity : AppCompatActivity() {
         }
 
         auth = Firebase.auth
-
-        db = FirebaseFirestore.getInstance()
 
         binding.btnGoogle.setOnClickListener {
             signIn()
